@@ -1,72 +1,57 @@
 import { useEffect, useState } from 'react';
-import { Camping } from '../types';
+import { Camping, RequestPayload, Status } from '../types';
+import { INTERVAL, PAYLOAD } from '../config';
 
-const INTERVAL = 500;
+export function usePolling(
+    { url, capacity, text, value }: Camping,
+    isRunning: boolean
+) {
+    const [isPolling, setIsPolling] = useState(false);
+    const [status, setStatus] = useState(Status.IN_PROGRESS);
 
-// export function usePolling({ url }: Camping) {
-//     const [isPolling, setIsPolling] = useState(true);
-
-//     useEffect(() => {
-//         let shouldContinue = true;
-//         const options = {
-//             body: '{ test: 1 }',
-//             method: 'POST',
-//         };
-
-//         async function polling() {
-//             try {
-//                 let body;
-//                 do {
-//                     const response = await fetch(url, options);
-//                     body = await response.json();
-
-//                     await delay();
-//                 } while (!body.isSuccessful && shouldContinue);
-//             } catch (error) {
-//                 console.error(error);
-//             } finally {
-//                 setIsPolling(false);
-//             }
-//         }
-
-//         polling();
-
-//         return function cleanUp() {
-//             shouldContinue = false;
-//         };
-//     }, [url]);
-
-//     return { isPolling };
-// }
-
-// function delay(time: number = 5000) {
-//     return new Promise((resolve) => setTimeout(resolve, time));
-// }
-
-export function usePolling({ url }: Camping, isRunning: boolean) {
     useEffect(() => {
         let intervalId: NodeJS.Timeout;
 
-        if (isRunning) {
-            fetchData();
-
-            intervalId = setInterval(fetchData, INTERVAL);
-        }
-
         async function fetchData() {
             try {
-                const response = await fetch(url, { method: 'POST' });
-                const body = await response.json();
+                const selectedCamping: RequestPayload['selectedCamping'] = {
+                    capacity,
+                    text,
+                    value,
+                };
+                const body = JSON.stringify({ ...PAYLOAD, selectedCamping });
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                const responseBody = await response.json();
 
-                if (body.isSuccessful) clearInterval(intervalId);
+                if (responseBody.isSuccessful) cleanUp();
             } catch (error) {
                 console.error(error);
             }
         }
 
-        return () => {
-            console.log('unmount');
+        function cleanUp() {
             clearInterval(intervalId);
-        };
-    });
+            setStatus(Status.BOOKED);
+            setIsPolling(false);
+        }
+
+        if (isRunning) {
+            setIsPolling(true);
+            setStatus(Status.IN_PROGRESS);
+
+            fetchData();
+
+            intervalId = setInterval(fetchData, INTERVAL);
+        }
+
+        return cleanUp;
+    }, [url, isRunning, capacity, text, value]);
+
+    return { isPolling, status };
 }

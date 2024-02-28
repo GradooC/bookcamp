@@ -8,21 +8,14 @@ export type CampingListProps = {
 };
 
 export function CampingList({ isRunning }: CampingListProps) {
-    const [isVis, setIsVis] = useState(true);
-
     return (
-        <>
-            {isVis && (
-                <FlatList
-                    data={CAMPINGS}
-                    contentContainerStyle={styles.container}
-                    renderItem={({ item }) => (
-                        <CampingItem item={item} isRunning={isRunning} />
-                    )}
-                />
+        <FlatList
+            data={CAMPINGS}
+            contentContainerStyle={styles.container}
+            renderItem={({ item }) => (
+                <CampingItem item={item} isRunning={isRunning} />
             )}
-            <Button title="hide" onPress={() => setIsVis(!isVis)}></Button>
-        </>
+        />
     );
 }
 

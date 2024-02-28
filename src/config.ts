@@ -1,4 +1,4 @@
-import { Camping } from './types';
+import { Camping, RequestPayload } from './types';
 
 export const CAMPINGS: Camping[] = [
     {
@@ -23,3 +23,19 @@ export const CAMPINGS: Camping[] = [
         url: 'http://10.0.2.2:3000/route3', // https://admin3.zapytai.by/widget/createBooking
     },
 ];
+
+export const PAYLOAD: Omit<RequestPayload, 'selectedCamping'> = {
+    isAgree: true,
+    fullName: 'Питер Пен',
+    phoneNumber: '+375 29 761 65 46',
+    email: 'test@mail.ru',
+    startDate: '2025-02-27T21:00:00.000Z',
+    endDate: '2025-02-28T21:00:00.000Z',
+    numberOfAdult: '8',
+    numberOfChildren: '0',
+    tenantId: null,
+    notes: '',
+    source: null,
+};
+
+export const INTERVAL = 5000;

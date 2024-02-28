@@ -34,3 +34,8 @@ export type Camping = {
     capacity: number;
     url: string;
 };
+
+export enum Status {
+    IN_PROGRESS = 'inProgress',
+    BOOKED = 'booked',
+}
