@@ -1,5 +1,7 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { COLOR, SPACE } from '../../styles';
 
 export type FooterProps = {
     isRunning: boolean;
@@ -11,23 +13,31 @@ export function Footer({ isRunning, onStartToggle }: FooterProps) {
 
     return (
         <View style={styles.container}>
-            <Pressable style={styles.button} onPress={onStartToggle}>
-                <Text style={styles.text}>{buttonText}</Text>
-            </Pressable>
+            <LinearGradient
+                style={styles.gradient}
+                start={[0, 0]}
+                colors={[COLOR.CYAN[500], COLOR.BLUE[500]]}
+            >
+                <Pressable style={styles.button} onPress={onStartToggle}>
+                    <Text style={styles.text}>{buttonText}</Text>
+                </Pressable>
+            </LinearGradient>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        margin: 10,
+        margin: SPACE['2.5'],
     },
     button: {
-        backgroundColor: 'skyblue',
-        padding: 15,
+        padding: SPACE[4],
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 20,
+    },
+    gradient: {
+        overflow: 'hidden',
+        borderRadius: SPACE[5],
     },
     text: {
         fontSize: 24,

@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { defineTask } from 'expo-task-manager';
 import { BackgroundFetchResult } from 'expo-background-fetch';
 import { useBackgroundFetch } from '../../hooks/use-background-fetch';
+import { COLOR } from '../../styles';
 
 const BACKGROUND_FETCH_TASK = 'background-fetch';
 
@@ -35,7 +36,7 @@ export function Application({}: ApplicationProps) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar style="auto" />
+            <StatusBar style="light" />
             <CampingList isRunning={isRunning} />
             <Footer isRunning={isRunning} onStartToggle={handleStartToggle} />
         </SafeAreaView>
@@ -45,5 +46,6 @@ export function Application({}: ApplicationProps) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: COLOR.ZINC[950],
     },
 });
