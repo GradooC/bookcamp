@@ -29,16 +29,13 @@ export function usePolling(
                 });
                 const responseBody = await response.json();
 
-                if (responseBody.isSuccessful) cleanUp();
+                if (responseBody.isSuccessful) {
+                    setStatus(Status.BOOKED);
+                    setIsPolling(false);
+                }
             } catch (error) {
                 console.error(error);
             }
-        }
-
-        function cleanUp() {
-            clearInterval(intervalId);
-            setStatus(Status.BOOKED);
-            setIsPolling(false);
         }
 
         if (isRunning) {
@@ -50,7 +47,9 @@ export function usePolling(
             intervalId = setInterval(fetchData, INTERVAL);
         }
 
-        return cleanUp;
+        return function cleanUp() {
+            clearInterval(intervalId);
+        };
     }, [url, isRunning, capacity, text, value]);
 
     return { isPolling, status };
