@@ -4,7 +4,7 @@ import { CampingList } from '../camping-list';
 import { Footer } from '../footer';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
-import { COLOR } from '../../styles';
+import { COLOR, SPACE } from '../../styles';
 
 export function Application() {
     const [isRunning, setIsRunning] = useState(false);
@@ -25,6 +25,7 @@ export function Application() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: SPACE['2.5'],
         backgroundColor: COLOR.ZINC[950],
     },
 });
