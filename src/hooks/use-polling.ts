@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Camping, RequestPayload, Status } from '../types';
 import { INTERVAL, PAYLOAD } from '../config';
+import BackgroundTimer, { IntervalId } from 'react-native-background-timer';
 
 export function usePolling(
     { url, capacity, text, value }: Camping,
@@ -10,7 +11,7 @@ export function usePolling(
     const [status, setStatus] = useState(Status.IN_PROGRESS);
 
     useEffect(() => {
-        let intervalId: NodeJS.Timeout;
+        let intervalId: IntervalId;
 
         async function fetchData() {
             try {
@@ -32,6 +33,7 @@ export function usePolling(
                 if (responseBody.isSuccessful) {
                     setStatus(Status.BOOKED);
                     setIsPolling(false);
+                    BackgroundTimer.clearInterval(intervalId);
                 }
             } catch (error) {
                 console.error(error);
@@ -44,11 +46,11 @@ export function usePolling(
 
             fetchData();
 
-            intervalId = setInterval(fetchData, INTERVAL);
+            intervalId = BackgroundTimer.setInterval(fetchData, INTERVAL);
         }
 
         return function cleanUp() {
-            clearInterval(intervalId);
+            BackgroundTimer.clearInterval(intervalId);
         };
     }, [url, isRunning, capacity, text, value]);
 

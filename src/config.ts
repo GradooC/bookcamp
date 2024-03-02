@@ -38,4 +38,4 @@ export const PAYLOAD: Omit<RequestPayload, 'selectedCamping'> = {
     source: null,
 };
 
-export const INTERVAL = 5000;
+export const INTERVAL = 1000;
