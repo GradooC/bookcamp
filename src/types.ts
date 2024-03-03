@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from "react-native";
+
 export type RequestPayload = {
     selectedCamping: SelectedCamping;
     isAgree: boolean;
@@ -33,6 +35,7 @@ export type Camping = {
     value: string;
     capacity: number;
     url: string;
+    image: ImageSourcePropType;
 };
 
 export enum Status {

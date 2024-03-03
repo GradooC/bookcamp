@@ -7,6 +7,7 @@ export const CAMPINGS: Camping[] = [
         value: '43',
         capacity: 6,
         url: 'http://10.0.2.2:3000/route1', // https://admin3.zapytai.by/widget/createBooking
+        image: require('../assets/one.jpg'),
     },
     {
         name: 'Купальская ночь',
@@ -14,6 +15,7 @@ export const CAMPINGS: Camping[] = [
         value: '128',
         capacity: 8,
         url: 'http://10.0.2.2:3000/route2', // https://admin3.zapytai.by/widget/createBooking
+        image: require('../assets/two.jpg'),
     },
     {
         name: 'Хуторок',
@@ -21,6 +23,7 @@ export const CAMPINGS: Camping[] = [
         value: '44',
         capacity: 8,
         url: 'http://10.0.2.2:3000/route3', // https://admin3.zapytai.by/widget/createBooking
+        image: require('../assets/three.jpeg'),
     },
 ];
 

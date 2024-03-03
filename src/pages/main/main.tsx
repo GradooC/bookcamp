@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 
 import { CampingList } from '../../components/camping-list';
 import { Footer } from '../../components/footer';

@@ -1,8 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Text,
+    ImageBackground,
+} from 'react-native';
 import { usePolling } from '../../hooks/use-polling';
 import { Camping, Status } from '../../types';
-import { COLOR, SPACE } from '../../styles';
+import { COLOR } from '../../styles';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export type CampingItemProps = {
@@ -11,7 +16,7 @@ export type CampingItemProps = {
 };
 
 function getColors(status: Status, isRunning: boolean) {
-    if (!isRunning) return [ COLOR.SLATE[500], COLOR.SLATE[400]];
+    if (!isRunning) return [COLOR.SLATE[500], COLOR.SLATE[400]];
 
     const colorMap = {
         [Status.IN_PROGRESS]: [COLOR.ORANGE[400], COLOR.RED[400]],
@@ -28,31 +33,50 @@ export function CampingItem({ item, isRunning }: CampingItemProps) {
     const colors = getColors(status, isRunning);
 
     return (
-        <LinearGradient
-            style={styles.container}
-            colors={colors}
-            start={[0, 0]}
-        >
-            <Text style={styles.text}>{item.name}</Text>
-            <ActivityIndicator
-                size="small"
-                color="white"
-                animating={animating}
-            />
+        <LinearGradient colors={colors} start={[0, 0]} style={styles.container}>
+            <View style={styles.nameBlock}>
+                <Text style={styles.text}>{item.name}</Text>
+            </View>
+            <LinearGradient
+                colors={[COLOR.ZINC[950], 'transparent']}
+                start={[0, 0]}
+                end={[0.15, 0]}
+                style={styles.imageBlock}
+            >
+                <ImageBackground source={item.image} style={styles.image} />
+            </LinearGradient>
         </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        padding: SPACE[4],
-        borderRadius: 15,
+        width: '100%',
+        height: 90,
+        padding: 3,
+        borderRadius: 20 + 3,
+        overflow: 'hidden',
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
     },
-    text: {
-        color: 'white',
-        fontSize: 20,
+    nameBlock: {
+        flex: 2,
+        justifyContent: 'center',
+        backgroundColor: COLOR.ZINC[950],
+        borderTopLeftRadius: 20,
+        borderBottomLeftRadius: 20,
+        paddingLeft: 20,
+    },
+    text: { color: 'white', fontSize: 20 },
+    imageBlock: {
+        flex: 1.8,
+        overflow: 'hidden',
+        borderTopRightRadius: 20,
+        borderBottomRightRadius: 20,
+    },
+    image: {
+        width: '100%',
+        height: '100%',
+        zIndex: -1,
     },
 });
