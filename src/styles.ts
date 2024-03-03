@@ -1,8 +1,11 @@
 /** Tailwind colors @see https://tailwindcss.com/docs/customizing-colors */
 export const COLOR = {
     SLATE: {
+        50: '#f8fafc',
+        300: '#cbd5e1',
         400: '#94a3b8',
         500: '#64748b',
+        800: '#1e293b',
         900: '#0f172a',
     },
     CYAN: {

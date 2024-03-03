@@ -1,31 +1,65 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
-import { CampingList } from '../camping-list';
-import { Footer } from '../footer';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from 'react';
 import { COLOR, SPACE } from '../../styles';
+import { NavigationContainer } from '@react-navigation/native';
+import {
+    createNativeStackNavigator,
+    NativeStackNavigationOptions,
+} from '@react-navigation/native-stack';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { Main } from '../../pages/main';
+import { Settings } from '../../pages/settings';
+
+const Stack = createNativeStackNavigator();
+
+const test: NativeStackNavigationOptions = {};
 
 export function Application() {
-    const [isRunning, setIsRunning] = useState(false);
-
-    const handleStartToggle = () => {
-        setIsRunning((prevIsRunning) => !prevIsRunning);
-    };
-
     return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar style="light" />
-            <CampingList isRunning={isRunning} />
-            <Footer isRunning={isRunning} onStartToggle={handleStartToggle} />
-        </SafeAreaView>
+        <>
+            <StatusBar style="dark" />
+            <NavigationContainer>
+                <Stack.Navigator
+                    screenOptions={{
+                        statusBarColor: COLOR.SLATE[800],
+                        headerTintColor: COLOR.SLATE[300],
+                        headerStyle: styles.header,
+                        contentStyle: styles.content,
+                    }}
+                >
+                    <Stack.Screen
+                        name="Main"
+                        options={({ navigation }) => ({
+                            headerRight: () => (
+                                <Ionicons
+                                    style={styles.title}
+                                    name="settings"
+                                    size={30}
+                                    onPress={() => {
+                                        navigation.navigate('Settings');
+                                    }}
+                                />
+                            ),
+                        })}
+                        component={Main}
+                    />
+                    <Stack.Screen name="Settings" component={Settings} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    content: {
         flex: 1,
         padding: SPACE['2.5'],
         backgroundColor: COLOR.ZINC[950],
+    },
+    header: {
+        backgroundColor: COLOR.SLATE[800],
+    },
+    title: {
+        color: COLOR.SLATE[300],
     },
 });
