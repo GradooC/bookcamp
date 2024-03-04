@@ -1,13 +1,8 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    ImageBackground,
-} from 'react-native';
+import { StyleSheet, View, Text, ImageBackground } from 'react-native';
 import { usePolling } from '../../hooks/use-polling';
 import { Camping, Status } from '../../types';
-import { COLOR } from '../../styles';
+import { COLOR, FONT, SPACE } from '../../styles';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export type CampingItemProps = {
@@ -65,9 +60,9 @@ const styles = StyleSheet.create({
         backgroundColor: COLOR.ZINC[950],
         borderTopLeftRadius: 20,
         borderBottomLeftRadius: 20,
-        paddingLeft: 20,
+        paddingLeft: SPACE[5],
     },
-    text: { color: 'white', fontSize: 20 },
+    text: { color: 'white', fontSize: FONT.SIZE[20] },
     imageBlock: {
         flex: 1.8,
         overflow: 'hidden',

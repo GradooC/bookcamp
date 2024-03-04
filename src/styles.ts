@@ -18,7 +18,7 @@ export const COLOR = {
         500: '#6366f1',
     },
     GREEN: {
-        400: '#4ade80'
+        400: '#4ade80',
     },
     EMERALD: {
         400: '#34d399',
@@ -31,15 +31,15 @@ export const COLOR = {
         400: '#f87171',
     },
     PINK: {
-        500: '#ec4899'
+        500: '#ec4899',
     },
     YELLOW: {
-        500: '#eab308'
+        500: '#eab308',
     },
     ZINC: {
         500: '#71717a',
         950: '#09090b',
-    }
+    },
 };
 
 /** Tailwind spacing @see https://tailwindcss.com/docs/margin */
@@ -47,4 +47,11 @@ export const SPACE = {
     2.5: 10,
     4: 16,
     5: 20,
+};
+
+export const FONT = {
+    SIZE: {
+        20: 20,
+        24: 24,
+    },
 };
