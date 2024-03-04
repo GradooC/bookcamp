@@ -3,28 +3,33 @@ import { StyleSheet, View, Text } from 'react-native';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FONT, SPACE } from '../../styles';
-import { useAsyncStorage } from '../../hooks/use-async-starage';
-import { Storage } from '../../constants';
+import { StorageKey } from '../../constants';
 import { getNormalizedDateString } from '../../utils/get-normalized-date-string';
+import {
+    AppActionType,
+    useAppDispatch,
+    useAppState,
+} from '../../providers/app-state-provider';
 
 export type SettingsProps = {};
 
-const STORAGE_KEYS = [Storage.START_DATE, Storage.END_DATE];
-
 export function Settings({}: SettingsProps) {
-    const { storageItems, setItems } = useAsyncStorage(STORAGE_KEYS);
-    const { startDate, endDate } = storageItems;
+    const { startDate, endDate } = useAppState();
+    const dispatch = useAppDispatch();
 
-    const handleDatePick = (key: Storage) => () => {
+    const handleDatePick = (key: StorageKey) => () => {
         DateTimePickerAndroid.open({
             mode: 'date',
             value: new Date(),
             display: 'spinner',
-            onChange: async (event, date) => {
+            onChange: (event, date) => {
                 if (event.type !== 'set' || !date) return;
 
                 const newDate = getNormalizedDateString(date);
-                await setItems([[key, newDate]]);
+                dispatch({
+                    type: AppActionType.SET_PROPERTIES,
+                    payload: [[key, newDate]],
+                });
             },
         });
     };
@@ -36,7 +41,7 @@ export function Settings({}: SettingsProps) {
                 <Text style={styles.value}>{startDate}</Text>
                 <Ionicons
                     style={styles.icon}
-                    onPress={handleDatePick(Storage.START_DATE)}
+                    onPress={handleDatePick(StorageKey.START_DATE)}
                     name="pencil-sharp"
                     size={20}
                 />
@@ -46,9 +51,9 @@ export function Settings({}: SettingsProps) {
                 <Text style={styles.value}>{endDate}</Text>
                 <Ionicons
                     style={styles.icon}
-                    onPress={handleDatePick(Storage.END_DATE)}
+                    onPress={handleDatePick(StorageKey.END_DATE)}
                     name="pencil-sharp"
-                    size={20}
+                    size={FONT.SIZE[20]}
                 />
             </View>
         </View>

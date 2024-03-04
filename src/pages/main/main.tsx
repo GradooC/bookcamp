@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Image, StyleSheet } from 'react-native';
 
 import { CampingList } from '../../components/camping-list';
