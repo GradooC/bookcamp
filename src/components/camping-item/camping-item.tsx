@@ -35,7 +35,8 @@ export function CampingItem({ item, isRunning }: CampingItemProps) {
             <LinearGradient
                 colors={[COLOR.ZINC[950], 'transparent']}
                 start={[0, 0]}
-                end={[0.15, 0]}
+                end={[0.2, 0.15]}
+                locations={[0.5, 1]}
                 style={styles.imageBlock}
             >
                 <ImageBackground source={item.image} style={styles.image} />
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     },
     text: { color: 'white', fontSize: FONT.SIZE[20] },
     imageBlock: {
-        flex: 1.8,
+        flex: 3.1,
         overflow: 'hidden',
         borderTopRightRadius: 20,
         borderBottomRightRadius: 20,
