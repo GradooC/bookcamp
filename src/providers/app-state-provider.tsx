@@ -16,8 +16,8 @@ export enum AppActionType {
 }
 
 type AppState = {
-    startDate?: string;
-    endDate?: string;
+    startDate: string;
+    endDate: string;
 };
 
 type AppAction = {
@@ -25,11 +25,16 @@ type AppAction = {
     payload: CustomKeyValuePair;
 };
 
+const DEFAULT_DATE = '2000-01-01T21:00:00.000Z';
+
 const AppStateContext = createContext<AppState | null>(null);
 
 const AppDispatchContext = createContext<Dispatch<AppAction> | null>(null);
 
-const initialState: AppState = {};
+const initialState: AppState = {
+    startDate: DEFAULT_DATE,
+    endDate: DEFAULT_DATE,
+};
 
 function reducer(state: AppState, action: AppAction) {
     switch (action.type) {

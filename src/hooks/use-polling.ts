@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Camping, RequestPayload, Status } from '../types';
 import { INTERVAL, PAYLOAD } from '../config';
 import BackgroundTimer, { IntervalId } from 'react-native-background-timer';
+import { useAppState } from '../providers/app-state-provider';
 
 export function usePolling(
     { url, capacity, text, value }: Camping,
@@ -9,6 +10,7 @@ export function usePolling(
 ) {
     const [isPolling, setIsPolling] = useState(false);
     const [status, setStatus] = useState(Status.IN_PROGRESS);
+    const { endDate, startDate } = useAppState();
 
     useEffect(() => {
         let intervalId: IntervalId;
@@ -20,7 +22,14 @@ export function usePolling(
                     text,
                     value,
                 };
-                const body = JSON.stringify({ ...PAYLOAD, selectedCamping });
+
+                const payload: RequestPayload = {
+                    ...PAYLOAD,
+                    selectedCamping,
+                    startDate,
+                    endDate,
+                };
+                const body = JSON.stringify(payload);
                 const response = await fetch(url, {
                     method: 'POST',
                     body,
