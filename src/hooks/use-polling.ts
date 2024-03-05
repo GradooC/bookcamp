@@ -10,7 +10,7 @@ export function usePolling(
 ) {
     const [isPolling, setIsPolling] = useState(false);
     const [status, setStatus] = useState(Status.IN_PROGRESS);
-    const { endDate, startDate } = useAppState();
+    const { startDate, endDate } = useAppState();
 
     useEffect(() => {
         let intervalId: IntervalId;

@@ -8,11 +8,14 @@ import {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StorageKey } from '../constants';
+import { DateRange } from '../types';
+import dayjs from 'dayjs';
 
-type CustomKeyValuePair = readonly [key: StorageKey, value: string | null][];
+type SetPropertiesPayload = Record<StorageKey, string>;
 
 export enum AppActionType {
     SET_PROPERTIES = 'setProperties',
+    SET_DATE_RANGE = 'setDateRange',
 }
 
 type AppState = {
@@ -20,10 +23,15 @@ type AppState = {
     endDate: string;
 };
 
-type AppAction = {
-    type: AppActionType.SET_PROPERTIES;
-    payload: CustomKeyValuePair;
-};
+type AppAction =
+    | {
+          type: AppActionType.SET_PROPERTIES;
+          payload: SetPropertiesPayload;
+      }
+    | {
+          type: AppActionType.SET_DATE_RANGE;
+          payload: DateRange;
+      };
 
 const DEFAULT_DATE = '2000-01-01T21:00:00.000Z';
 
@@ -36,12 +44,22 @@ const initialState: AppState = {
     endDate: DEFAULT_DATE,
 };
 
-function reducer(state: AppState, action: AppAction) {
-    switch (action.type) {
+function reducer(prevState: AppState, { type, payload }: AppAction): AppState {
+    switch (type) {
         case AppActionType.SET_PROPERTIES:
-            const properties = Object.fromEntries(action.payload);
-            return { ...state, ...properties };
-
+            return { ...prevState, ...payload };
+        case AppActionType.SET_DATE_RANGE:
+            const normalizedStartDate = dayjs(payload.startDate)
+                .startOf('day')
+                .toISOString();
+            const normalizedEndDate = dayjs(payload.endDate)
+                .startOf('day')
+                .toISOString();
+            return {
+                ...prevState,
+                startDate: normalizedStartDate,
+                endDate: normalizedEndDate,
+            };
         default:
             return initialState;
     }
@@ -53,11 +71,10 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     useEffect(() => {
         async function getStorageItems() {
             const keys = await AsyncStorage.getAllKeys();
-            const entries = (await AsyncStorage.multiGet(
-                keys
-            )) as CustomKeyValuePair;
+            const entries = await AsyncStorage.multiGet(keys);
+            const payload = Object.fromEntries(entries) as SetPropertiesPayload;
 
-            dispatch({ type: AppActionType.SET_PROPERTIES, payload: entries });
+            dispatch({ type: AppActionType.SET_PROPERTIES, payload });
         }
 
         getStorageItems();
@@ -89,7 +106,7 @@ export function useAppDispatch() {
 
     if (!appDispatchContext) {
         throw new Error(
-            'useAppState hook should be used inside the AppStateProvider'
+            'useAppDispatch hook should be used inside the AppStateProvider'
         );
     }
 

@@ -1,4 +1,10 @@
-import { ImageSourcePropType } from "react-native";
+import { ImageSourcePropType } from 'react-native';
+import { DateType } from 'react-native-ui-datepicker';
+
+export type DateRange = {
+    startDate: DateType;
+    endDate: DateType;
+};
 
 export type RequestPayload = {
     selectedCamping: SelectedCamping;
