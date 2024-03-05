@@ -1,3 +1,4 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ImageSourcePropType } from 'react-native';
 import { DateType } from 'react-native-ui-datepicker';
 
@@ -44,7 +45,27 @@ export type Camping = {
     image: ImageSourcePropType;
 };
 
-export enum Status {
+export enum CampingItemStatus {
     IN_PROGRESS = 'inProgress',
     BOOKED = 'booked',
+}
+
+export enum AppStatus {
+    NEED_DATES = 'needDates',
+    RUNNING = 'running',
+    PAUSED = 'paused',
+}
+
+export type RootStackParamList = {
+    Settings: undefined;
+    Main: undefined;
+};
+
+export type RootNativeStackScreenProps<T extends keyof RootStackParamList> =
+    NativeStackScreenProps<RootStackParamList, T>;
+
+declare global {
+    namespace ReactNavigation {
+        interface RootParamList extends RootStackParamList {}
+    }
 }

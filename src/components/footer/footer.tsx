@@ -2,14 +2,55 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { COLOR, SPACE } from '../../styles';
+import { AppStatus } from '../../types';
+import {
+    AppActionType,
+    useAppDispatch,
+    useAppState,
+} from '../../providers/app-state-provider';
+import { useNavigation } from '@react-navigation/native';
 
-export type FooterProps = {
-    isRunning: boolean;
-    onStartToggle: VoidFunction;
-};
+export type FooterProps = {};
 
-export function Footer({ isRunning, onStartToggle }: FooterProps) {
-    const buttonText = isRunning ? 'stop' : 'start';
+export function Footer({}: FooterProps) {
+    const { appStatus } = useAppState();
+    const dispatch = useAppDispatch();
+    const navigation = useNavigation();
+
+    const handleStart = () => {
+        dispatch({
+            type: AppActionType.SET_STATUS,
+            payload: AppStatus.RUNNING,
+        });
+    };
+
+    const handlePause = () => {
+        dispatch({
+            type: AppActionType.SET_STATUS,
+            payload: AppStatus.PAUSED,
+        });
+    };
+
+    const handleSetDates = () => {
+        navigation.navigate('Settings');
+    };
+
+    const appStatusMap = {
+        [AppStatus.NEED_DATES]: {
+            buttonTitle: 'set dates',
+            handler: handleSetDates,
+        },
+        [AppStatus.RUNNING]: {
+            buttonTitle: 'pause',
+            handler: handlePause,
+        },
+        [AppStatus.PAUSED]: {
+            buttonTitle: 'start',
+            handler: handleStart,
+        },
+    };
+
+    const { buttonTitle, handler } = appStatusMap[appStatus];
 
     return (
         <LinearGradient
@@ -17,8 +58,8 @@ export function Footer({ isRunning, onStartToggle }: FooterProps) {
             start={[0, 0]}
             colors={[COLOR.CYAN[500], COLOR.BLUE[500]]}
         >
-            <Pressable style={styles.button} onPress={onStartToggle}>
-                <Text style={styles.text}>{buttonText}</Text>
+            <Pressable style={styles.button} onPress={handler}>
+                <Text style={styles.text}>{buttonTitle}</Text>
             </Pressable>
         </LinearGradient>
     );

@@ -7,8 +7,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Main } from '../../pages/main';
 import { Settings } from '../../pages/settings';
 import { AppStateProvider } from '../../providers/app-state-provider';
+import { RootStackParamList } from '../../types';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function Application() {
     return (

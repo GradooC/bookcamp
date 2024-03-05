@@ -1,31 +1,32 @@
 import React from 'react';
 import { StyleSheet, View, Text, ImageBackground } from 'react-native';
 import { usePolling } from '../../hooks/use-polling';
-import { Camping, Status } from '../../types';
+import { AppStatus, Camping, CampingItemStatus } from '../../types';
 import { COLOR, FONT, SPACE } from '../../styles';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useAppState } from '../../providers/app-state-provider';
 
 export type CampingItemProps = {
     item: Camping;
-    isRunning: boolean;
 };
 
-function getColors(status: Status, isRunning: boolean) {
-    if (!isRunning) return [COLOR.SLATE[500], COLOR.SLATE[400]];
+function getColors(campingItemStatus: CampingItemStatus, appStatus: AppStatus) {
+    if (appStatus !== AppStatus.RUNNING)
+        return [COLOR.SLATE[500], COLOR.SLATE[400]];
 
     const colorMap = {
-        [Status.IN_PROGRESS]: [COLOR.ORANGE[400], COLOR.RED[400]],
-        [Status.BOOKED]: [COLOR.GREEN[400], COLOR.EMERALD[400]],
+        [CampingItemStatus.IN_PROGRESS]: [COLOR.ORANGE[400], COLOR.RED[400]],
+        [CampingItemStatus.BOOKED]: [COLOR.GREEN[400], COLOR.EMERALD[400]],
     };
 
-    return colorMap[status];
+    return colorMap[campingItemStatus];
 }
 
-export function CampingItem({ item, isRunning }: CampingItemProps) {
-    const { isPolling, status } = usePolling(item, isRunning);
+export function CampingItem({ item }: CampingItemProps) {
+    const { campingItemStatus } = usePolling(item);
+    const { appStatus } = useAppState();
 
-    const animating = isRunning && isPolling;
-    const colors = getColors(status, isRunning);
+    const colors = getColors(campingItemStatus, appStatus);
 
     return (
         <LinearGradient colors={colors} start={[0, 0]} style={styles.container}>

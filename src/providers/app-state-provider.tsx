@@ -8,19 +8,21 @@ import {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StorageKey } from '../constants';
-import { DateRange } from '../types';
+import { AppStatus, DateRange } from '../types';
 import dayjs from 'dayjs';
 
 type SetPropertiesPayload = Record<StorageKey, string>;
 
 export enum AppActionType {
-    SET_PROPERTIES = 'setProperties',
-    SET_DATE_RANGE = 'setDateRange',
+    SET_PROPERTIES = 'SET_PROPERTIES',
+    SET_DATE_RANGE = 'SET_DATE_RANGE',
+    SET_STATUS = 'SET_STATUS',
 }
 
 type AppState = {
-    startDate: string;
-    endDate: string;
+    startDate?: string;
+    endDate?: string;
+    appStatus: AppStatus;
 };
 
 type AppAction =
@@ -31,17 +33,18 @@ type AppAction =
     | {
           type: AppActionType.SET_DATE_RANGE;
           payload: DateRange;
+      }
+    | {
+          type: AppActionType.SET_STATUS;
+          payload: AppStatus;
       };
-
-const DEFAULT_DATE = '2000-01-01T21:00:00.000Z';
 
 const AppStateContext = createContext<AppState | null>(null);
 
 const AppDispatchContext = createContext<Dispatch<AppAction> | null>(null);
 
 const initialState: AppState = {
-    startDate: DEFAULT_DATE,
-    endDate: DEFAULT_DATE,
+    appStatus: AppStatus.NEED_DATES,
 };
 
 function reducer(prevState: AppState, { type, payload }: AppAction): AppState {
@@ -49,19 +52,29 @@ function reducer(prevState: AppState, { type, payload }: AppAction): AppState {
         case AppActionType.SET_PROPERTIES:
             return { ...prevState, ...payload };
         case AppActionType.SET_DATE_RANGE:
+            const isDatesSet =
+                Boolean(payload.startDate) && Boolean(payload.endDate);
+            const status = isDatesSet ? AppStatus.PAUSED : AppStatus.NEED_DATES;
+
             const normalizedStartDate = dayjs(payload.startDate)
                 .startOf('day')
                 .toISOString();
+
             const normalizedEndDate = dayjs(payload.endDate)
                 .startOf('day')
                 .toISOString();
+
             return {
                 ...prevState,
+                appStatus: status,
                 startDate: normalizedStartDate,
                 endDate: normalizedEndDate,
             };
+        case AppActionType.SET_STATUS:
+            return { ...prevState, appStatus: payload };
         default:
-            return initialState;
+            const exhaustiveCheck: never = type;
+            throw new Error(`Unhandled action type: ${exhaustiveCheck}`);
     }
 }
 
@@ -73,6 +86,16 @@ export function AppStateProvider({ children }: PropsWithChildren) {
             const keys = await AsyncStorage.getAllKeys();
             const entries = await AsyncStorage.multiGet(keys);
             const payload = Object.fromEntries(entries) as SetPropertiesPayload;
+
+            if (
+                payload[StorageKey.START_DATE] &&
+                payload[StorageKey.END_DATE]
+            ) {
+                dispatch({
+                    type: AppActionType.SET_STATUS,
+                    payload: AppStatus.PAUSED,
+                });
+            }
 
             dispatch({ type: AppActionType.SET_PROPERTIES, payload });
         }

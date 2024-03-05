@@ -1,21 +1,27 @@
 import { useEffect, useState } from 'react';
-import { Camping, RequestPayload, Status } from '../types';
+import {
+    Camping,
+    RequestPayload,
+    CampingItemStatus,
+    AppStatus,
+} from '../types';
 import { INTERVAL, PAYLOAD } from '../config';
 import BackgroundTimer, { IntervalId } from 'react-native-background-timer';
 import { useAppState } from '../providers/app-state-provider';
 
-export function usePolling(
-    { url, capacity, text, value }: Camping,
-    isRunning: boolean
-) {
+export function usePolling({ url, capacity, text, value }: Camping) {
     const [isPolling, setIsPolling] = useState(false);
-    const [status, setStatus] = useState(Status.IN_PROGRESS);
-    const { startDate, endDate } = useAppState();
+    const [campingItemStatus, setCampingItemStatus] = useState(
+        CampingItemStatus.IN_PROGRESS
+    );
+    const { startDate, endDate, appStatus } = useAppState();
 
     useEffect(() => {
         let intervalId: IntervalId;
 
         async function fetchData() {
+            if (!startDate || !endDate) return;
+
             try {
                 const selectedCamping: RequestPayload['selectedCamping'] = {
                     capacity,
@@ -40,7 +46,7 @@ export function usePolling(
                 const responseBody = await response.json();
 
                 if (responseBody.isSuccessful) {
-                    setStatus(Status.BOOKED);
+                    setCampingItemStatus(CampingItemStatus.BOOKED);
                     setIsPolling(false);
                     BackgroundTimer.clearInterval(intervalId);
                 }
@@ -49,9 +55,9 @@ export function usePolling(
             }
         }
 
-        if (isRunning) {
+        if (appStatus === AppStatus.RUNNING) {
             setIsPolling(true);
-            setStatus(Status.IN_PROGRESS);
+            setCampingItemStatus(CampingItemStatus.IN_PROGRESS);
 
             fetchData();
 
@@ -61,7 +67,7 @@ export function usePolling(
         return function cleanUp() {
             BackgroundTimer.clearInterval(intervalId);
         };
-    }, [url, isRunning, capacity, text, value]);
+    }, [url, appStatus, capacity, text, value]);
 
-    return { isPolling, status };
+    return { isPolling, campingItemStatus };
 }

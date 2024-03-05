@@ -12,8 +12,8 @@ import {
 import { DateRange } from '../../types';
 
 export type DatePickerModalProps = {
-    startDate: string;
-    endDate: string;
+    startDate?: string;
+    endDate?: string;
 };
 
 export function DatePicker({ startDate, endDate }: DatePickerModalProps) {

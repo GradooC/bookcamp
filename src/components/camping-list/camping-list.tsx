@@ -4,18 +4,14 @@ import { CAMPINGS } from '../../config';
 import { CampingItem } from '../camping-item';
 import { SPACE } from '../../styles';
 
-export type CampingListProps = {
-    isRunning: boolean;
-};
+export type CampingListProps = {};
 
-export function CampingList({ isRunning }: CampingListProps) {
+export function CampingList({}: CampingListProps) {
     return (
         <FlatList
             data={CAMPINGS}
             contentContainerStyle={styles.container}
-            renderItem={({ item }) => (
-                <CampingItem item={item} isRunning={isRunning} />
-            )}
+            renderItem={({ item }) => <CampingItem item={item} />}
         />
     );
 }
