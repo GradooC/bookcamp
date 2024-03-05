@@ -2,9 +2,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { COLOR, SPACE } from '../../styles';
-import { AppStatus } from '../../types';
+import { AppActionType, AppStatus } from '../../types';
 import {
-    AppActionType,
     useAppDispatch,
     useAppState,
 } from '../../providers/app-state-provider';

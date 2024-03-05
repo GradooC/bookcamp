@@ -5,11 +5,8 @@ import dayjs from 'dayjs';
 import { RangeChange } from 'react-native-ui-datepicker/src/types';
 import { COLOR } from '../../styles';
 
-import {
-    AppActionType,
-    useAppDispatch,
-} from '../../providers/app-state-provider';
-import { DateRange } from '../../types';
+import { useAppDispatch } from '../../providers/app-state-provider';
+import { AppActionType, DateRange } from '../../types';
 
 export type DatePickerModalProps = {
     startDate?: string;

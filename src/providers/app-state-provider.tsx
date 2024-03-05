@@ -8,16 +8,10 @@ import {
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StorageKey } from '../constants';
-import { AppStatus, DateRange } from '../types';
+import { AppActionType, AppStatus, DateRange } from '../types';
 import dayjs from 'dayjs';
 
 type SetPropertiesPayload = Record<StorageKey, string>;
-
-export enum AppActionType {
-    SET_PROPERTIES = 'SET_PROPERTIES',
-    SET_DATE_RANGE = 'SET_DATE_RANGE',
-    SET_STATUS = 'SET_STATUS',
-}
 
 type AppState = {
     startDate?: string;

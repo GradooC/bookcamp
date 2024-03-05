@@ -56,6 +56,12 @@ export enum AppStatus {
     PAUSED = 'paused',
 }
 
+export enum AppActionType {
+    SET_PROPERTIES = 'SET_PROPERTIES',
+    SET_DATE_RANGE = 'SET_DATE_RANGE',
+    SET_STATUS = 'SET_STATUS',
+}
+
 export type RootStackParamList = {
     Settings: undefined;
     Main: undefined;
