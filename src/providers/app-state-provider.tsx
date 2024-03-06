@@ -11,7 +11,7 @@ import { StorageKey } from '../constants';
 import { AppActionType, AppStatus, DateRange } from '../types';
 import dayjs from 'dayjs';
 
-type SetPropertiesPayload = Record<StorageKey, string>;
+type SyncStatePayload = Record<StorageKey, string>;
 
 type AppState = {
     startDate?: string;
@@ -21,8 +21,8 @@ type AppState = {
 
 type AppAction =
     | {
-          type: AppActionType.SET_PROPERTIES;
-          payload: SetPropertiesPayload;
+          type: AppActionType.SYNC_STATE;
+          payload: SyncStatePayload;
       }
     | {
           type: AppActionType.SET_DATE_RANGE;
@@ -41,31 +41,48 @@ const initialState: AppState = {
     appStatus: AppStatus.NEED_DATES,
 };
 
+function handleSyncState(
+    prevState: AppState,
+    payload: SyncStatePayload
+): AppState {
+    const isDatesSet = Boolean(payload.startDate) && Boolean(payload.endDate);
+    const appStatus = isDatesSet ? AppStatus.PAUSED : AppStatus.NEED_DATES;
+
+    return { ...prevState, ...payload, appStatus };
+}
+
+function handleSetDateRange(prevState: AppState, payload: DateRange): AppState {
+    const isDatesSet = Boolean(payload.startDate) && Boolean(payload.endDate);
+    const appStatus = isDatesSet ? AppStatus.PAUSED : AppStatus.NEED_DATES;
+
+    const normalizedStartDate = dayjs(payload.startDate)
+        .startOf('day')
+        .toISOString();
+
+    const normalizedEndDate = dayjs(payload.endDate)
+        .startOf('day')
+        .toISOString();
+
+    return {
+        ...prevState,
+        appStatus,
+        startDate: normalizedStartDate,
+        endDate: normalizedEndDate,
+    };
+}
+
+function handleSetStatus(prevState: AppState, payload: AppStatus): AppState {
+    return { ...prevState, appStatus: payload };
+}
+
 function reducer(prevState: AppState, { type, payload }: AppAction): AppState {
     switch (type) {
-        case AppActionType.SET_PROPERTIES:
-            return { ...prevState, ...payload };
+        case AppActionType.SYNC_STATE:
+            return handleSyncState(prevState, payload);
         case AppActionType.SET_DATE_RANGE:
-            const isDatesSet =
-                Boolean(payload.startDate) && Boolean(payload.endDate);
-            const status = isDatesSet ? AppStatus.PAUSED : AppStatus.NEED_DATES;
-
-            const normalizedStartDate = dayjs(payload.startDate)
-                .startOf('day')
-                .toISOString();
-
-            const normalizedEndDate = dayjs(payload.endDate)
-                .startOf('day')
-                .toISOString();
-
-            return {
-                ...prevState,
-                appStatus: status,
-                startDate: normalizedStartDate,
-                endDate: normalizedEndDate,
-            };
+            return handleSetDateRange(prevState, payload);
         case AppActionType.SET_STATUS:
-            return { ...prevState, appStatus: payload };
+            return handleSetStatus(prevState, payload);
         default:
             const exhaustiveCheck: never = type;
             throw new Error(`Unhandled action type: ${exhaustiveCheck}`);
@@ -79,19 +96,9 @@ export function AppStateProvider({ children }: PropsWithChildren) {
         async function getStorageItems() {
             const keys = await AsyncStorage.getAllKeys();
             const entries = await AsyncStorage.multiGet(keys);
-            const payload = Object.fromEntries(entries) as SetPropertiesPayload;
+            const payload = Object.fromEntries(entries) as SyncStatePayload;
 
-            if (
-                payload[StorageKey.START_DATE] &&
-                payload[StorageKey.END_DATE]
-            ) {
-                dispatch({
-                    type: AppActionType.SET_STATUS,
-                    payload: AppStatus.PAUSED,
-                });
-            }
-
-            dispatch({ type: AppActionType.SET_PROPERTIES, payload });
+            dispatch({ type: AppActionType.SYNC_STATE, payload });
         }
 
         getStorageItems();

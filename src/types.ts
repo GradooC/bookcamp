@@ -57,7 +57,7 @@ export enum AppStatus {
 }
 
 export enum AppActionType {
-    SET_PROPERTIES = 'SET_PROPERTIES',
+    SYNC_STATE = 'SYNC_STATE',
     SET_DATE_RANGE = 'SET_DATE_RANGE',
     SET_STATUS = 'SET_STATUS',
 }
