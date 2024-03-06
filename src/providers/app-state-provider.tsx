@@ -63,6 +63,13 @@ function handleSetDateRange(prevState: AppState, payload: DateRange): AppState {
         .startOf('day')
         .toISOString();
 
+    if (isDatesSet) {
+        AsyncStorage.multiSet([
+            [StorageKey.START_DATE, normalizedStartDate],
+            [StorageKey.END_DATE, normalizedEndDate],
+        ]);
+    }
+
     return {
         ...prevState,
         appStatus,
