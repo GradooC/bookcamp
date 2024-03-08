@@ -8,42 +8,57 @@ import { Main } from '../../pages/main';
 import { Settings } from '../../pages/settings';
 import { AppStateProvider } from '../../providers/app-state-provider';
 import { RootStackParamList } from '../../types';
+import { setNotificationHandler } from 'expo-notifications';
+import { NotificationsProvider } from '../../providers/notifications-provider';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
+setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+    }),
+});
 
 export function Application() {
     return (
         <>
             <StatusBar style="dark" />
             <AppStateProvider>
-                <NavigationContainer>
-                    <Stack.Navigator
-                        screenOptions={{
-                            statusBarColor: COLOR.SLATE[800],
-                            headerTintColor: COLOR.SLATE[300],
-                            headerStyle: styles.header,
-                            contentStyle: styles.content,
-                        }}
-                    >
-                        <Stack.Screen
-                            name="Main"
-                            options={({ navigation }) => ({
-                                headerRight: () => (
-                                    <Ionicons
-                                        style={styles.title}
-                                        name="settings"
-                                        size={30}
-                                        onPress={() => {
-                                            navigation.navigate('Settings');
-                                        }}
-                                    />
-                                ),
-                            })}
-                            component={Main}
-                        />
-                        <Stack.Screen name="Settings" component={Settings} />
-                    </Stack.Navigator>
-                </NavigationContainer>
+                <NotificationsProvider>
+                    <NavigationContainer>
+                        <Stack.Navigator
+                            screenOptions={{
+                                statusBarColor: COLOR.SLATE[800],
+                                headerTintColor: COLOR.SLATE[300],
+                                headerStyle: styles.header,
+                                contentStyle: styles.content,
+                            }}
+                        >
+                            <Stack.Screen
+                                name="Main"
+                                options={({ navigation }) => ({
+                                    headerRight: () => (
+                                        <Ionicons
+                                            style={styles.title}
+                                            name="settings"
+                                            size={30}
+                                            onPress={() => {
+                                                navigation.navigate('Settings');
+                                            }}
+                                        />
+                                    ),
+                                })}
+                                component={Main}
+                            />
+                            <Stack.Screen
+                                name="Settings"
+                                component={Settings}
+                            />
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                </NotificationsProvider>
             </AppStateProvider>
         </>
     );

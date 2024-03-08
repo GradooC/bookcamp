@@ -16,6 +16,7 @@ type SyncStatePayload = Record<StorageKey, string>;
 type AppState = {
     startDate?: string;
     endDate?: string;
+    pushToken?: string;
     appStatus: AppStatus;
 };
 
@@ -31,6 +32,10 @@ type AppAction =
     | {
           type: AppActionType.SET_STATUS;
           payload: AppStatus;
+      }
+    | {
+          type: AppActionType.SET_PUSH_TOKEN;
+          payload?: string;
       };
 
 const AppStateContext = createContext<AppState | null>(null);
@@ -78,6 +83,10 @@ function handleSetDateRange(prevState: AppState, payload: DateRange): AppState {
     };
 }
 
+function handleSetPushToken(prevState: AppState, payload?: string): AppState {
+    return { ...prevState, pushToken: payload };
+}
+
 function handleSetStatus(prevState: AppState, payload: AppStatus): AppState {
     return { ...prevState, appStatus: payload };
 }
@@ -90,6 +99,8 @@ function reducer(prevState: AppState, { type, payload }: AppAction): AppState {
             return handleSetDateRange(prevState, payload);
         case AppActionType.SET_STATUS:
             return handleSetStatus(prevState, payload);
+        case AppActionType.SET_PUSH_TOKEN:
+            return handleSetPushToken(prevState, payload);
         default:
             const exhaustiveCheck: never = type;
             throw new Error(`Unhandled action type: ${exhaustiveCheck}`);

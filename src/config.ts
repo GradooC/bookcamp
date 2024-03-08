@@ -6,7 +6,7 @@ export const CAMPINGS: Camping[] = [
         text: 'Переволока - (6) мест',
         value: '43',
         capacity: 6,
-        url: 'http://10.0.2.2:3000/route1', // https://admin3.zapytai.by/widget/createBooking
+        url: 'https://hgw55hwl-3000.euw.devtunnels.ms/route1', // https://admin3.zapytai.by/widget/createBooking
         image: require('../assets/one.jpg'),
     },
     {
@@ -14,7 +14,7 @@ export const CAMPINGS: Camping[] = [
         text: 'Купальская ночь - (8) мест',
         value: '128',
         capacity: 8,
-        url: 'http://10.0.2.2:3000/route2', // https://admin3.zapytai.by/widget/createBooking
+        url: 'https://hgw55hwl-3000.euw.devtunnels.ms/route2', // https://admin3.zapytai.by/widget/createBooking
         image: require('../assets/two.jpg'),
     },
     {
@@ -22,7 +22,7 @@ export const CAMPINGS: Camping[] = [
         text: 'Хуторок - (8) мест',
         value: '44',
         capacity: 8,
-        url: 'http://10.0.2.2:3000/route3', // https://admin3.zapytai.by/widget/createBooking
+        url: 'https://hgw55hwl-3000.euw.devtunnels.ms/route3', // https://admin3.zapytai.by/widget/createBooking
         image: require('../assets/three.jpeg'),
     },
 ];

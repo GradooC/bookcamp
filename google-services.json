@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "828606366386",
+    "project_id": "bookcamp-d5764",
+    "storage_bucket": "bookcamp-d5764.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828606366386:android:3efbeef0a6ea428264ffab",
+        "android_client_info": {
+          "package_name": "com.gradooc.bootcamp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOdceu29OPeLFzj4C9R1rF0zYXJee6CAs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

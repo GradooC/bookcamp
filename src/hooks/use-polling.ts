@@ -8,13 +8,14 @@ import {
 import { INTERVAL, PAYLOAD } from '../config';
 import BackgroundTimer, { IntervalId } from 'react-native-background-timer';
 import { useAppState } from '../providers/app-state-provider';
+import { sendPushNotification } from '../api/send-push-notification';
 
-export function usePolling({ url, capacity, text, value }: Camping) {
+export function usePolling({ url, capacity, text, value, name }: Camping) {
     const [isPolling, setIsPolling] = useState(false);
     const [campingItemStatus, setCampingItemStatus] = useState(
         CampingItemStatus.IN_PROGRESS
     );
-    const { startDate, endDate, appStatus } = useAppState();
+    const { startDate, endDate, appStatus, pushToken } = useAppState();
 
     useEffect(() => {
         let intervalId: IntervalId;
@@ -49,6 +50,10 @@ export function usePolling({ url, capacity, text, value }: Camping) {
                     setCampingItemStatus(CampingItemStatus.BOOKED);
                     setIsPolling(false);
                     BackgroundTimer.clearInterval(intervalId);
+                    sendPushNotification({
+                        to: pushToken,
+                        body: `Стоянка ${name} забронирована`,
+                    });
                 }
             } catch (error) {
                 console.error(error);
@@ -67,7 +72,17 @@ export function usePolling({ url, capacity, text, value }: Camping) {
         return function cleanUp() {
             BackgroundTimer.clearInterval(intervalId);
         };
-    }, [url, appStatus, capacity, text, value]);
+    }, [
+        url,
+        appStatus,
+        capacity,
+        text,
+        value,
+        pushToken,
+        startDate,
+        endDate,
+        name,
+    ]);
 
     return { isPolling, campingItemStatus };
 }

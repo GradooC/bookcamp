@@ -60,6 +60,7 @@ export enum AppActionType {
     SYNC_STATE = 'SYNC_STATE',
     SET_DATE_RANGE = 'SET_DATE_RANGE',
     SET_STATUS = 'SET_STATUS',
+    SET_PUSH_TOKEN = 'SET_PUSH_TOKEN',
 }
 
 export type RootStackParamList = {
