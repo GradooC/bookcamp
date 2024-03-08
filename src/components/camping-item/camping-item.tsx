@@ -33,15 +33,16 @@ export function CampingItem({ item }: CampingItemProps) {
             <View style={styles.nameBlock}>
                 <Text style={styles.text}>{item.name}</Text>
             </View>
-            <LinearGradient
-                colors={[COLOR.ZINC[950], 'transparent']}
-                start={[0, 0]}
-                end={[0.2, 0.15]}
-                locations={[0.5, 1]}
-                style={styles.imageBlock}
-            >
-                <ImageBackground source={item.image} style={styles.image} />
-            </LinearGradient>
+
+            <ImageBackground source={item.image} style={styles.image}>
+                <LinearGradient
+                    colors={[COLOR.ZINC[950], 'transparent']}
+                    start={[0, 0]}
+                    end={[1, 0]}
+                    locations={[0, 0.2]}
+                    style={styles.gradient}
+                />
+            </ImageBackground>
         </LinearGradient>
     );
 }
@@ -65,15 +66,13 @@ const styles = StyleSheet.create({
         paddingLeft: SPACE[5],
     },
     text: { color: 'white', fontSize: FONT.SIZE[20] },
-    imageBlock: {
-        flex: 3.1,
-        overflow: 'hidden',
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
+    gradient: {
+        flex: 1,
     },
     image: {
-        width: '100%',
-        height: '100%',
-        zIndex: -1,
+        flex: 2.9,
+        borderTopRightRadius: 20,
+        borderBottomRightRadius: 20,
+        overflow: 'hidden',
     },
 });
