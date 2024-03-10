@@ -48,6 +48,7 @@ export type Camping = {
 export enum CampingItemStatus {
     IN_PROGRESS = 'inProgress',
     BOOKED = 'booked',
+    OCCUPIED = 'occupied',
 }
 
 export enum AppStatus {

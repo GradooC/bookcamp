@@ -18,6 +18,9 @@ export const COLOR = {
     INDIGO: {
         500: '#6366f1',
     },
+    VIOLET: {
+        500: '#8b5cf6',
+    },
     GREEN: {
         400: '#4ade80',
     },
