@@ -1,12 +1,21 @@
 import { Camping, RequestPayload } from './types';
 
+const baseUrl = process.env.EXPO_PUBLIC_API_URL;
+const fullName = process.env.EXPO_PUBLIC_FULL_NAME;
+const phoneNumber = process.env.EXPO_PUBLIC_PHONE_NUMBER;
+const email = process.env.EXPO_PUBLIC_EMAIL;
+
+if (!baseUrl || !fullName || !phoneNumber || !email) {
+    throw new Error('Some of the env variables were not set')
+}
+
 export const CAMPINGS: Camping[] = [
     {
         name: 'Переволока',
         text: 'Переволока - (6) мест',
         value: '43',
         capacity: 6,
-        url: 'https://hgw55hwl-3000.euw.devtunnels.ms/route1', // https://admin3.zapytai.by/widget/createBooking
+        url: `${baseUrl}`,
         image: require('../assets/one.jpg'),
     },
     {
@@ -14,7 +23,7 @@ export const CAMPINGS: Camping[] = [
         text: 'Купальская ночь - (8) мест',
         value: '128',
         capacity: 8,
-        url: 'https://hgw55hwl-3000.euw.devtunnels.ms/route2', // https://admin3.zapytai.by/widget/createBooking
+        url: `${baseUrl}`,
         image: require('../assets/two.jpg'),
     },
     {
@@ -22,7 +31,7 @@ export const CAMPINGS: Camping[] = [
         text: 'Хуторок - (8) мест',
         value: '44',
         capacity: 8,
-        url: 'https://hgw55hwl-3000.euw.devtunnels.ms/route3', // https://admin3.zapytai.by/widget/createBooking
+        url: `${baseUrl}`,
         image: require('../assets/three.jpeg'),
     },
 ];
@@ -32,9 +41,9 @@ export const PAYLOAD: Omit<
     'selectedCamping' | 'startDate' | 'endDate'
 > = {
     isAgree: true,
-    fullName: 'Питер Пен',
-    phoneNumber: '+375 29 761 65 46',
-    email: 'test@mail.ru',
+    fullName,
+    phoneNumber,
+    email,
     numberOfAdult: '8',
     numberOfChildren: '0',
     tenantId: null,
