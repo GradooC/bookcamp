@@ -8,13 +8,12 @@
             "distribution": "internal"
         },
         "preview": {
-            "distribution": "internal"
-        },
-        "production": {
+            "distribution": "internal",
             "env": {
                 "EXPO_PUBLIC_API_URL": "https://admin3.zapytai.by/widget/createBooking"
             }
-        }
+        },
+        "production": {}
     },
     "submit": {
         "production": {}
