@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { COLOR, SPACE } from '../../styles';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -10,6 +10,8 @@ import { AppStateProvider } from '../../providers/app-state-provider';
 import { RootStackParamList } from '../../types';
 import { setNotificationHandler } from 'expo-notifications';
 import { NotificationsProvider } from '../../providers/notifications-provider';
+import { Logs } from '../../pages/logs';
+import { LogProvider } from '../../providers/log-provider';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -26,39 +28,56 @@ export function Application() {
         <>
             <StatusBar style="dark" />
             <AppStateProvider>
-                <NotificationsProvider>
-                    <NavigationContainer>
-                        <Stack.Navigator
-                            screenOptions={{
-                                statusBarColor: COLOR.SLATE[800],
-                                headerTintColor: COLOR.SLATE[300],
-                                headerStyle: styles.header,
-                                contentStyle: styles.content,
-                            }}
-                        >
-                            <Stack.Screen
-                                name="Main"
-                                options={({ navigation }) => ({
-                                    headerRight: () => (
-                                        <Ionicons
-                                            style={styles.title}
-                                            name="settings"
-                                            size={30}
-                                            onPress={() => {
-                                                navigation.navigate('Settings');
-                                            }}
-                                        />
-                                    ),
-                                })}
-                                component={Main}
-                            />
-                            <Stack.Screen
-                                name="Settings"
-                                component={Settings}
-                            />
-                        </Stack.Navigator>
-                    </NavigationContainer>
-                </NotificationsProvider>
+                <LogProvider>
+                    <NotificationsProvider>
+                        <NavigationContainer>
+                            <Stack.Navigator
+                                screenOptions={{
+                                    statusBarColor: COLOR.SLATE[800],
+                                    headerTintColor: COLOR.SLATE[300],
+                                    headerStyle: styles.header,
+                                    contentStyle: styles.content,
+                                }}
+                            >
+                                <Stack.Screen
+                                    name="Main"
+                                    options={({ navigation }) => ({
+                                        headerRight: () => (
+                                            <View style={styles.headerRight}>
+                                                <Ionicons
+                                                    style={styles.title}
+                                                    name="list"
+                                                    size={30}
+                                                    onPress={() => {
+                                                        navigation.navigate(
+                                                            'Logs'
+                                                        );
+                                                    }}
+                                                />
+                                                <Ionicons
+                                                    style={styles.title}
+                                                    name="settings"
+                                                    size={30}
+                                                    onPress={() => {
+                                                        navigation.navigate(
+                                                            'Settings'
+                                                        );
+                                                    }}
+                                                />
+                                            </View>
+                                        ),
+                                    })}
+                                    component={Main}
+                                />
+                                <Stack.Screen
+                                    name="Settings"
+                                    component={Settings}
+                                />
+                                <Stack.Screen name="Logs" component={Logs} />
+                            </Stack.Navigator>
+                        </NavigationContainer>
+                    </NotificationsProvider>
+                </LogProvider>
             </AppStateProvider>
         </>
     );
@@ -73,6 +92,7 @@ const styles = StyleSheet.create({
     header: {
         backgroundColor: COLOR.SLATE[800],
     },
+    headerRight: { display: 'flex', flexDirection: 'row', gap: 10 },
     title: {
         color: COLOR.SLATE[300],
     },

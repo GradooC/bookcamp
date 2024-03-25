@@ -4,12 +4,15 @@ import {
     RequestPayload,
     CampingItemStatus,
     AppStatus,
+    LogActionType,
 } from '../types';
 import { INTERVAL, PAYLOAD } from '../config';
 import BackgroundTimer, { IntervalId } from 'react-native-background-timer';
 import { useAppState } from '../providers/app-state-provider';
 import { sendPushNotification } from '../api/send-push-notification';
 import { ErrorMessage } from '../constants';
+import dayjs from 'dayjs';
+import { useLogDispatch } from '../providers/log-provider';
 
 export function usePolling({ url, capacity, text, value, name }: Camping) {
     const [isPolling, setIsPolling] = useState(false);
@@ -17,6 +20,7 @@ export function usePolling({ url, capacity, text, value, name }: Camping) {
         CampingItemStatus.IN_PROGRESS
     );
     const { startDate, endDate, appStatus, pushToken } = useAppState();
+    const dispatch = useLogDispatch();
 
     useEffect(() => {
         let intervalId: IntervalId;
@@ -46,6 +50,17 @@ export function usePolling({ url, capacity, text, value, name }: Camping) {
                     },
                 });
                 const responseBody = await response.json();
+
+                const time = dayjs(Date.now()).format('hh:mm:ss');
+                const logItem = {
+                    time,
+                    request: payload,
+                    response: responseBody,
+                };
+                dispatch({
+                    type: LogActionType.ADD_ITEM,
+                    payload: logItem,
+                });
 
                 if (responseBody.isSuccessful) {
                     setCampingItemStatus(CampingItemStatus.BOOKED);

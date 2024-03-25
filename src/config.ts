@@ -6,7 +6,7 @@ const phoneNumber = process.env.EXPO_PUBLIC_PHONE_NUMBER;
 const email = process.env.EXPO_PUBLIC_EMAIL;
 
 if (!baseUrl || !fullName || !phoneNumber || !email) {
-    throw new Error('Some of the env variables were not set')
+    throw new Error('Some of the env variables were not set');
 }
 
 export const CAMPINGS: Camping[] = [
@@ -52,3 +52,5 @@ export const PAYLOAD: Omit<
 };
 
 export const INTERVAL = 1000;
+export const LOG_ITEM_HEIGHT = 300;
+export const MAX_LOG_LENGTH = 500;

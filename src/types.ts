@@ -22,18 +22,25 @@ export type RequestPayload = {
     source?: any;
 };
 
-type SelectedCamping = {
-    text: string;
-    value: string;
-    capacity: number;
-};
-
 export type ResponseBody = {
     isSuccessful: boolean;
     message?: any;
     errorMessage: string;
     data?: any;
     targetUrl?: any;
+};
+
+export type Log = {
+    id: number;
+    time: string;
+    request: RequestPayload;
+    response: ResponseBody;
+};
+
+type SelectedCamping = {
+    text: string;
+    value: string;
+    capacity: number;
 };
 
 export type Camping = {
@@ -62,11 +69,17 @@ export enum AppActionType {
     SET_DATE_RANGE = 'SET_DATE_RANGE',
     SET_STATUS = 'SET_STATUS',
     SET_PUSH_TOKEN = 'SET_PUSH_TOKEN',
+    ADD_LOG_ITEM = 'ADD_LOG_ITEM',
+}
+
+export enum LogActionType {
+    ADD_ITEM = 'ADD_ITEM',
 }
 
 export type RootStackParamList = {
     Settings: undefined;
     Main: undefined;
+    Logs: undefined;
 };
 
 export type RootNativeStackScreenProps<T extends keyof RootStackParamList> =
