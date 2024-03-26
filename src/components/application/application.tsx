@@ -1,9 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { COLOR, SPACE } from '../../styles';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { Main } from '../../pages/main';
 import { Settings } from '../../pages/settings';
 import { AppStateProvider } from '../../providers/app-state-provider';
@@ -12,6 +11,7 @@ import { setNotificationHandler } from 'expo-notifications';
 import { NotificationsProvider } from '../../providers/notifications-provider';
 import { Logs } from '../../pages/logs';
 import { LogProvider } from '../../providers/log-provider';
+import { MainHeaderRight } from './main-header-right';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -41,32 +41,9 @@ export function Application() {
                             >
                                 <Stack.Screen
                                     name="Main"
-                                    options={({ navigation }) => ({
-                                        headerRight: () => (
-                                            <View style={styles.headerRight}>
-                                                <Ionicons
-                                                    style={styles.title}
-                                                    name="list"
-                                                    size={30}
-                                                    onPress={() => {
-                                                        navigation.navigate(
-                                                            'Logs'
-                                                        );
-                                                    }}
-                                                />
-                                                <Ionicons
-                                                    style={styles.title}
-                                                    name="settings"
-                                                    size={30}
-                                                    onPress={() => {
-                                                        navigation.navigate(
-                                                            'Settings'
-                                                        );
-                                                    }}
-                                                />
-                                            </View>
-                                        ),
-                                    })}
+                                    options={{
+                                        headerRight: MainHeaderRight,
+                                    }}
                                     component={Main}
                                 />
                                 <Stack.Screen
@@ -91,9 +68,5 @@ const styles = StyleSheet.create({
     },
     header: {
         backgroundColor: COLOR.SLATE[800],
-    },
-    headerRight: { display: 'flex', flexDirection: 'row', gap: 10 },
-    title: {
-        color: COLOR.SLATE[300],
     },
 });

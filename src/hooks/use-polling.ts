@@ -13,6 +13,7 @@ import { sendPushNotification } from '../api/send-push-notification';
 import { ErrorMessage } from '../constants';
 import dayjs from 'dayjs';
 import { useLogDispatch } from '../providers/log-provider';
+import { booking } from '../api/booking';
 
 export function usePolling({ url, capacity, text, value, name }: Camping) {
     const [isPolling, setIsPolling] = useState(false);
@@ -41,43 +42,38 @@ export function usePolling({ url, capacity, text, value, name }: Camping) {
                     startDate,
                     endDate,
                 };
-                const body = JSON.stringify(payload);
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-                const responseBody = await response.json();
+
+                const response = await booking({ url, payload });
 
                 const time = dayjs(Date.now()).format('hh:mm:ss');
                 const logItem = {
                     time,
+                    response,
                     request: payload,
-                    response: responseBody,
                 };
                 dispatch({
                     type: LogActionType.ADD_ITEM,
                     payload: logItem,
                 });
 
-                if (responseBody.isSuccessful) {
+                if (response.isSuccessful) {
                     setCampingItemStatus(CampingItemStatus.BOOKED);
                     setIsPolling(false);
                     BackgroundTimer.clearInterval(intervalId);
                     sendPushNotification({
                         to: pushToken,
+                        title: 'Забронировано',
                         body: `Стоянка ${name} забронирована`,
                     });
                 }
 
-                if (responseBody.errorMessage === ErrorMessage.OCCUPIED) {
+                if (response.errorMessage === ErrorMessage.OCCUPIED) {
                     setCampingItemStatus(CampingItemStatus.OCCUPIED);
                     setIsPolling(false);
                     BackgroundTimer.clearInterval(intervalId);
                     sendPushNotification({
                         to: pushToken,
+                        title: 'Занято',
                         body: `Стоянка ${name} уже занята`,
                     });
                 }

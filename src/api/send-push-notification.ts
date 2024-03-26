@@ -2,17 +2,19 @@
 type SendPushNotificationParams = {
     to?: string;
     body: string;
+    title: string;
 };
 
 export async function sendPushNotification({
     to,
     body,
+    title,
 }: SendPushNotificationParams) {
     const message = {
         to,
         body,
+        title,
         sound: 'default',
-        title: 'Забронировано',
     };
 
     await fetch('https://exp.host/--/api/v2/push/send', {

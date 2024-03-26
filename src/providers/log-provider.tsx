@@ -19,16 +19,18 @@ type LogAction = {
 };
 
 function handleAddLogItem(prevLogs: Log[], payload: Omit<Log, 'id'>): Log[] {
-    if (prevLogs.length >= MAX_LOG_LENGTH) {
-        prevLogs.shift();
+    let currentLogs = prevLogs;
+
+    if (currentLogs.length >= MAX_LOG_LENGTH) {
+        currentLogs = prevLogs.slice(-100);
     }
 
-    const lastItem = prevLogs.at(-1);
+    const lastItem = currentLogs.at(-1);
     const lastItemId = lastItem?.id || 0;
     const id = lastItemId + 1;
     const item = { ...payload, id };
 
-    return [...prevLogs, item];
+    return [...currentLogs, item];
 }
 
 function logsReducer(prevLogs: Log[], action: LogAction): Log[] {
