@@ -12,6 +12,7 @@ import { NotificationsProvider } from '../../providers/notifications-provider';
 import { Logs } from '../../pages/logs';
 import { LogProvider } from '../../providers/log-provider';
 import { MainHeaderRight } from './main-header-right';
+import * as NavigationBar from 'expo-navigation-bar';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -24,6 +25,9 @@ setNotificationHandler({
 });
 
 export function Application() {
+    NavigationBar.setBackgroundColorAsync(COLOR.ZINC[950]);
+    NavigationBar.setButtonStyleAsync('light');
+
     return (
         <>
             <StatusBar style="dark" />
