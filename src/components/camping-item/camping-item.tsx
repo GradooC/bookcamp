@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     StyleSheet,
     View,
@@ -12,11 +12,7 @@ import { COLOR, FONT, SPACE } from '../../styles';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppState } from '../../providers/app-state-provider';
 import { BlurView } from 'expo-blur';
-import Animated, {
-    FadeInRight,
-    FadeOutRight,
-    useSharedValue,
-} from 'react-native-reanimated';
+import Animated, { FadeInRight, FadeOutRight } from 'react-native-reanimated';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
@@ -56,15 +52,7 @@ export function CampingItem({ item }: CampingItemProps) {
     const { campingItemStatus } = usePolling(item);
     const { appStatus } = useAppState();
 
-    const [isBooked, setIsBooked] = useState(false);
-    const intensity = useSharedValue(0);
-
     const colors = getColors(campingItemStatus, appStatus);
-
-    const handlePress = () => {
-        intensity.value = intensity.value ? 0 : 30;
-        setIsBooked(!isBooked);
-    };
 
     const { statusText, statusColor } = statusMap[campingItemStatus];
     const isFinished =
@@ -73,7 +61,7 @@ export function CampingItem({ item }: CampingItemProps) {
             campingItemStatus === CampingItemStatus.BOOKED);
 
     return (
-        <Pressable onPress={handlePress}>
+        <Pressable>
             <LinearGradient
                 colors={colors}
                 start={[0, 0]}
