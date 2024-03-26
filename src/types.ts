@@ -31,7 +31,7 @@ export type ResponseBody = {
 };
 
 export type Log = {
-    id: number;
+    id: string;
     time: string;
     request: RequestPayload;
     response: ResponseBody;

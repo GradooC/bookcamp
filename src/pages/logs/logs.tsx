@@ -34,7 +34,7 @@ export function Logs({}: LogsProps) {
             renderItem={({ item }) => <LogItem item={item} />}
             onEndReached={handleOnEndReached}
             onTouchStart={handleOnTouchStart}
-            keyExtractor={({ id }) => String(id)}
+            keyExtractor={({ id }) => id}
             getItemLayout={(_data, index) => ({
                 length: LOG_ITEM_HEIGHT,
                 offset: LOG_ITEM_HEIGHT * index,

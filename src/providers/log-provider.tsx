@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { Log, LogActionType } from '../types';
 import { MAX_LOG_LENGTH } from '../config';
+import { randomUUID } from 'expo-crypto';
 
 const LogContext = createContext<Log[] | null>(null);
 const LogDispatchContext = createContext<Dispatch<LogAction> | null>(null);
@@ -25,9 +26,7 @@ function handleAddLogItem(prevLogs: Log[], payload: Omit<Log, 'id'>): Log[] {
         currentLogs = prevLogs.slice(-100);
     }
 
-    const lastItem = currentLogs.at(-1);
-    const lastItemId = lastItem?.id || 0;
-    const id = lastItemId + 1;
+    const id = randomUUID();
     const item = { ...payload, id };
 
     return [...currentLogs, item];
