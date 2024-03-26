@@ -10,9 +10,12 @@ export const COLOR = {
         950: '#020617',
     },
     CYAN: {
+        100: '#cffafe',
         500: '#06b6d4',
     },
     BLUE: {
+        100: '#dbeafe',
+        200: '#bfdbfe',
         500: '#3b82f6',
     },
     INDIGO: {

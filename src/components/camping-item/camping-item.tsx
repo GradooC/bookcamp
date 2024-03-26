@@ -1,18 +1,24 @@
-import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    ImageBackground,
-    Pressable,
-} from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View, Text, ImageBackground } from 'react-native';
 import { usePolling } from '../../hooks/use-polling';
 import { AppStatus, Camping, CampingItemStatus } from '../../types';
 import { COLOR, FONT, SPACE } from '../../styles';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppState } from '../../providers/app-state-provider';
 import { BlurView } from 'expo-blur';
-import Animated, { FadeInRight, FadeOutRight } from 'react-native-reanimated';
+import Animated, {
+    FadeInRight,
+    FadeOutRight,
+    cancelAnimation,
+    useAnimatedStyle,
+    useSharedValue,
+    withRepeat,
+    withTiming,
+} from 'react-native-reanimated';
+import { INTERVAL } from '../../config';
+
+const START_LEFT = -50;
+const FINAL_LEFT = 100;
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
@@ -52,8 +58,28 @@ export function CampingItem({ item }: CampingItemProps) {
     const { campingItemStatus } = usePolling(item);
     const { appStatus } = useAppState();
 
-    const colors = getColors(campingItemStatus, appStatus);
+    const left = useSharedValue(START_LEFT);
+    const animatedStyles = useAnimatedStyle(() => ({
+        left: `${left.value}%`,
+    }));
 
+    useEffect(() => {
+        const shouldAnimate =
+            appStatus === AppStatus.RUNNING &&
+            campingItemStatus === CampingItemStatus.IN_PROGRESS;
+
+        if (shouldAnimate) {
+            left.value = withRepeat(
+                withTiming(FINAL_LEFT, { duration: INTERVAL }),
+                -1
+            );
+        } else {
+            cancelAnimation(left);
+            left.value = START_LEFT;
+        }
+    }, [appStatus, campingItemStatus]);
+
+    const colors = getColors(campingItemStatus, appStatus);
     const { statusText, statusColor } = statusMap[campingItemStatus];
     const isFinished =
         appStatus === AppStatus.RUNNING &&
@@ -61,19 +87,15 @@ export function CampingItem({ item }: CampingItemProps) {
             campingItemStatus === CampingItemStatus.BOOKED);
 
     return (
-        <Pressable>
-            <LinearGradient
-                colors={colors}
-                start={[0, 0]}
-                style={styles.container}
-            >
+        <LinearGradient colors={colors} start={[0, 0]} style={styles.container}>
+            <View style={styles.wrapper}>
                 <View style={styles.nameBlock}>
                     <Text style={styles.name}>{item.name}</Text>
                 </View>
                 <ImageBackground source={item.image} style={styles.image}>
                     {isFinished && (
                         <AnimatedBlurView
-                            style={styles.gradient}
+                            style={styles.blur}
                             intensity={30}
                             experimentalBlurMethod="dimezisBlurView"
                             entering={FadeInRight.duration(500)}
@@ -89,21 +111,20 @@ export function CampingItem({ item }: CampingItemProps) {
                         </AnimatedBlurView>
                     )}
                 </ImageBackground>
-            </LinearGradient>
-        </Pressable>
+            </View>
+            <Animated.View style={[styles.activityIndicator, animatedStyles]} />
+        </LinearGradient>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
         height: 90,
         padding: 3,
         borderRadius: 20 + 3,
         overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'row',
     },
+    wrapper: { display: 'flex', flexDirection: 'row', height: '100%' },
     nameBlock: {
         flex: 2,
         justifyContent: 'center',
@@ -113,10 +134,10 @@ const styles = StyleSheet.create({
         paddingLeft: SPACE[5],
     },
     name: { color: COLOR.SLATE[300], fontSize: FONT.SIZE[20] },
-    gradient: {
+    blur: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         display: 'flex',
         flexDirection: 'row',
         gap: 10,
@@ -129,6 +150,12 @@ const styles = StyleSheet.create({
         height: 15,
         width: 15,
         borderRadius: 15,
+    },
+    activityIndicator: {
+        height: 3,
+        width: '50%',
+        backgroundColor: COLOR.BLUE[100],
+        position: 'relative',
     },
     image: {
         flex: 2.9,
