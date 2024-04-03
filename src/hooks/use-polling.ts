@@ -30,18 +30,18 @@ export function usePolling({ url, capacity, text, value, name }: Camping) {
             if (!startDate || !endDate) return;
 
             try {
-                const selectedCamping: RequestPayload['selectedCamping'] = {
+                const selectedCamping = {
                     capacity,
                     text,
                     value,
-                };
+                } satisfies RequestPayload['selectedCamping'];
 
-                const payload: RequestPayload = {
+                const payload = {
                     ...PAYLOAD,
                     selectedCamping,
                     startDate,
                     endDate,
-                };
+                } satisfies RequestPayload;
 
                 const response = await booking({ url, payload });
 
